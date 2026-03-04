@@ -5,6 +5,9 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text('Welcome to the Setting Page!')));
+    return Scaffold(
+      appBar: AppBar(title: const Text('設定')),
+      body: const Center(child: Text('Welcome to the Setting Page!')),
+    );
   }
 }

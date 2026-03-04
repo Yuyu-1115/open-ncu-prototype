@@ -32,7 +32,10 @@ class ShortcutCircular extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           label,
-          style: TextStyle(fontSize: 12.0, color: Colors.grey.shade700),
+          style: TextStyle(
+            fontSize: 12.0,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
           textAlign: TextAlign.center,
         ),
       ],

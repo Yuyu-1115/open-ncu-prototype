@@ -14,6 +14,8 @@ class QuickButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Expanded(
       flex: 1,
       child: ElevatedButton(
@@ -23,8 +25,8 @@ class QuickButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.grey.shade800,
+          backgroundColor: colorScheme.surface,
+          foregroundColor: colorScheme.onSurface,
           elevation: 2.0,
         ),
         child: Column(

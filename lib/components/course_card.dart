@@ -15,19 +15,23 @@ class CourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final subtextColor = colorScheme.onSurfaceVariant;
+
     return Container(
       width: 200,
       height: 100,
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey.shade300, width: 1),
+        color: colorScheme.surface,
+        border: Border.all(color: colorScheme.outlineVariant, width: 1),
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade300,
+            color: colorScheme.shadow.withValues(alpha: 0.15),
             spreadRadius: 2,
             blurRadius: 3,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: Offset(0, 3),
           ),
         ],
       ),
@@ -51,20 +55,20 @@ class CourseCard extends StatelessWidget {
             SizedBox(height: 2),
             Row(
               children: [
-                Icon(Icons.schedule, size: 14, color: Colors.grey.shade600),
+                Icon(Icons.schedule, size: 14, color: subtextColor),
                 SizedBox(width: 5),
                 Text(
                   courseTime,
-                  style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                  style: TextStyle(fontSize: 14, color: subtextColor),
                 ),
               ],
             ),
             Row(
               children: [
-                Icon(Icons.location_on, size: 14, color: Colors.grey.shade600),
+                Icon(Icons.location_on, size: 14, color: subtextColor),
                 Text(
                   courseLocation,
-                  style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                  style: TextStyle(fontSize: 14, color: subtextColor),
                   textAlign: TextAlign.right,
                 ),
               ],

@@ -19,14 +19,15 @@ class HomePage extends StatelessWidget {
         slivers: [
           _buildCourseSection(context),
           _buildShortcutSection(context),
-          _buildQuickActionSection(),
-          _buildAnnouncementSection(),
+          _buildQuickActionSection(context),
+          _buildAnnouncementSection(context),
         ],
       ),
     );
   }
 
   Widget _buildSectionHeader(
+    BuildContext context,
     String title, {
     VoidCallback? onTap,
   }) {
@@ -50,7 +51,7 @@ class HomePage extends StatelessWidget {
                 icon: Icon(
                   Icons.arrow_forward_ios,
                   size: 16,
-                  color: Colors.grey.shade600,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
           ],
@@ -63,6 +64,7 @@ class HomePage extends StatelessWidget {
     return SliverMainAxisGroup(
       slivers: [
         _buildSectionHeader(
+          context,
           '接下來的課程',
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => CurriculumPage()),
@@ -96,6 +98,7 @@ class HomePage extends StatelessWidget {
     return SliverMainAxisGroup(
       slivers: [
         _buildSectionHeader(
+          context,
           '捷徑',
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => CurriculumPage()),
@@ -172,10 +175,10 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickActionSection() {
+  Widget _buildQuickActionSection(BuildContext context) {
     return SliverMainAxisGroup(
       slivers: [
-        _buildSectionHeader('快速功能表'),
+        _buildSectionHeader(context, '快速功能表'),
         SliverPadding(
           padding: const EdgeInsets.symmetric(
             horizontal: _horizontalPadding,
@@ -202,10 +205,11 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildAnnouncementSection() {
+  Widget _buildAnnouncementSection(BuildContext context) {
     return SliverMainAxisGroup(
       slivers: [
         _buildSectionHeader(
+          context,
           '校務公告',
           onTap: () => print('查看課表'),
         ),

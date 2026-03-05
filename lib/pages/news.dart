@@ -40,16 +40,64 @@ class _NewsTabContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isAll = category == '全部';
-    return ListView.separated(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
-      itemCount: isAll ? 20 : 10,
-      separatorBuilder: (_, _) => const SizedBox(height: 8.0),
-      itemBuilder: (_, index) {
-        final label = isAll
-            ? _allCategories[index % _allCategories.length]
-            : category;
-        return AnnouncementCard(label: label, title: '$label消息 #${index + 1}');
-      },
+    return Column(
+      children: [
+        Expanded(
+          flex: 2,
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            itemCount: isAll ? 20 : 10,
+            separatorBuilder: (_, _) => const SizedBox(height: 8.0),
+            itemBuilder: (_, index) {
+              final label = isAll
+                  ? _allCategories[index % _allCategories.length]
+                  : category;
+              return AnnouncementCard(
+                label: label,
+                title: '$label消息 #${index + 1}',
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+          child: Divider(color: Theme.of(context).dividerColor, thickness: 1.0),
+        ),
+        Expanded(
+          flex: 3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: null,
+                      icon: Icon(Icons.arrow_back_ios, size: 16),
+                    ),
+                    Expanded(
+                      child: Text(
+                        '今日',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: null,
+                      icon: Icon(Icons.arrow_forward_ios, size: 16),
+                    ),
+                  ],
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

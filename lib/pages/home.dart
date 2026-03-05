@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prototype/components/announcement_card.dart';
+
 import 'package:prototype/components/course_card.dart';
 import 'package:prototype/components/quick_button.dart';
 import 'package:prototype/components/shortcut.dart';
@@ -20,7 +20,6 @@ class HomePage extends StatelessWidget {
           _buildCourseSection(context),
           _buildShortcutSection(context),
           _buildQuickActionSection(context),
-          _buildAnnouncementSection(context),
         ],
       ),
     );
@@ -34,16 +33,16 @@ class HomePage extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
-          _horizontalPadding, _sectionSpacing, _horizontalPadding, 0,
+          _horizontalPadding,
+          _sectionSpacing,
+          _horizontalPadding,
+          0,
         ),
         child: Row(
           children: [
             Text(
               title,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             if (onTap != null)
               IconButton(
@@ -66,9 +65,9 @@ class HomePage extends StatelessWidget {
         _buildSectionHeader(
           context,
           '接下來的課程',
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CurriculumPage()),
-          ),
+          onTap: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => CurriculumPage())),
         ),
         SliverToBoxAdapter(
           child: SizedBox(
@@ -80,8 +79,7 @@ class HomePage extends StatelessWidget {
                 vertical: 4.0,
               ),
               itemCount: 3,
-              separatorBuilder: (context, index) =>
-                  const SizedBox(width: 10),
+              separatorBuilder: (context, index) => const SizedBox(width: 10),
               itemBuilder: (context, index) => CourseCard(
                 courseName: '計算機概論 I',
                 courseTime: '週四 13:00-16:00',
@@ -100,9 +98,9 @@ class HomePage extends StatelessWidget {
         _buildSectionHeader(
           context,
           '捷徑',
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CurriculumPage()),
-          ),
+          onTap: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => CurriculumPage())),
         ),
         SliverPadding(
           padding: const EdgeInsets.symmetric(
@@ -162,14 +160,16 @@ class HomePage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         children: items
-            .expand((item) => [
-                  if (items.indexOf(item) > 0) const SizedBox(width: 10.0),
-                  QuickButton(
-                    icon: item.icon,
-                    label: item.label,
-                    onPressed: () => print(item.label),
-                  ),
-                ])
+            .expand(
+              (item) => [
+                if (items.indexOf(item) > 0) const SizedBox(width: 10.0),
+                QuickButton(
+                  icon: item.icon,
+                  label: item.label,
+                  onPressed: () => print(item.label),
+                ),
+              ],
+            )
             .toList(),
       ),
     );
@@ -199,32 +199,6 @@ class HomePage extends StatelessWidget {
                 (icon: Icons.explore, label: '選課系統'),
               ]),
             ]),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAnnouncementSection(BuildContext context) {
-    return SliverMainAxisGroup(
-      slivers: [
-        _buildSectionHeader(
-          context,
-          '校務公告',
-          onTap: () => print('查看課表'),
-        ),
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: 200,
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              separatorBuilder: (context, index) =>
-                  const SizedBox(height: 8.0),
-              itemBuilder: (context, index) {
-                return AnnouncementCard(label: '公告', title: '維護公告');
-              },
-              itemCount: 3,
-            ),
           ),
         ),
       ],

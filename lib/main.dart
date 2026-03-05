@@ -6,7 +6,6 @@ import 'package:prototype/pages/portal.dart';
 import 'package:prototype/pages/setting.dart';
 import 'package:prototype/theme.dart';
 
-final themeNotifier = ThemeNotifier();
 
 void main() {
   runApp(const MainApp());

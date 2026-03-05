@@ -14,7 +14,12 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('神奇松果')),
+      appBar: AppBar(
+        title: const Text(
+          '神奇松果',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
       body: CustomScrollView(
         slivers: [
           _buildCourseSection(context),

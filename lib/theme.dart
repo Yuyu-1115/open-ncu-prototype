@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+final themeNotifier = ThemeNotifier();
+
 class ThemeNotifier extends ValueNotifier<ThemeMode> {
   ThemeNotifier() : super(ThemeMode.system);
 

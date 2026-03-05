@@ -12,7 +12,10 @@ class NewsPage extends StatelessWidget {
       length: _tabs.length,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('訊息'),
+          title: const Text(
+            '訊息',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           bottom: TabBar(
             isScrollable: true,
             tabAlignment: TabAlignment.start,
@@ -20,9 +23,7 @@ class NewsPage extends StatelessWidget {
           ),
         ),
         body: TabBarView(
-          children: _tabs
-              .map((tab) => _NewsTabContent(category: tab))
-              .toList(),
+          children: _tabs.map((tab) => _NewsTabContent(category: tab)).toList(),
         ),
       ),
     );
@@ -42,13 +43,12 @@ class _NewsTabContent extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       itemCount: isAll ? 20 : 10,
-      separatorBuilder: (_, __) => const SizedBox(height: 8.0),
+      separatorBuilder: (_, _) => const SizedBox(height: 8.0),
       itemBuilder: (_, index) {
-        final label = isAll ? _allCategories[index % _allCategories.length] : category;
-        return AnnouncementCard(
-          label: label,
-          title: '$label消息 #${index + 1}',
-        );
+        final label = isAll
+            ? _allCategories[index % _allCategories.length]
+            : category;
+        return AnnouncementCard(label: label, title: '$label消息 #${index + 1}');
       },
     );
   }

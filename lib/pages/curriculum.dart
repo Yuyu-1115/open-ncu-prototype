@@ -6,7 +6,9 @@ class CurriculumPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('課表')),
+      appBar: AppBar(
+        title: const Text('課表', style: TextStyle(fontWeight: FontWeight.bold)),
+      ),
       body: const Center(child: Text('?')),
     );
   }

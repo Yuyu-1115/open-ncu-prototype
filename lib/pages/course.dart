@@ -1,11 +1,17 @@
 // lib/pages/course_selection.dart
 import 'package:flutter/material.dart';
 
-class CourseSelectionPage extends StatelessWidget {
+class CourseSelectionPage extends StatefulWidget {
   const CourseSelectionPage({super.key});
 
-  // 定義節次標籤
-  static const List<String> periods = [
+  @override
+  State<CourseSelectionPage> createState() => _CourseSelectionPageState();
+}
+
+class _CourseSelectionPageState extends State<CourseSelectionPage> {
+  bool _showWeekends = false;
+
+  static const List<String> _periods = [
     '1',
     '2',
     '3',
@@ -20,80 +26,114 @@ class CourseSelectionPage extends StatelessWidget {
     'B',
     'C',
   ];
+  static const List<String> _weekDays = ['一', '二', '三', '四', '五', '六', '日'];
+  static const double _rowHeight = 50.0;
+  static const int _periodColumnFlex = 1;
+  static const int _dayCellFlex = 2;
+
+  List<String> get _visibleDays =>
+      _showWeekends ? _weekDays : _weekDays.sublist(0, 5);
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final days = _visibleDays;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('課表')),
+      appBar: AppBar(
+        title: const Text('課表', style: TextStyle(fontWeight: FontWeight.bold)),
+        actions: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '週末',
+                style: TextStyle(fontSize: 14, color: colorScheme.onSurface),
+              ),
+              Switch(
+                value: _showWeekends,
+                onChanged: (v) => setState(() => _showWeekends = v),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16.0),
-            child: Text(
-              '2026 春季選課 (週一至週日 / 12節次)',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ),
-          // 課表主體
-          Expanded(
-            child: Row(
-              children: [
-                // Y軸
-                Column(
-                  children: [
-                    const SizedBox(height: 30, width: 40),
-                    ...periods.map(
-                      (p) => Container(
-                        height: 50,
-                        width: 40,
-                        alignment: Alignment.center,
-                        child: Text(
-                          p,
-                          style: TextStyle(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                        ),
+          // Fixed week header
+          Row(
+            children: [
+              Spacer(flex: _periodColumnFlex),
+              ...days.map(
+                (day) => Expanded(
+                  flex: _dayCellFlex,
+                  child: SizedBox(
+                    height: 36,
+                    child: Center(
+                      child: Text(
+                        day,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ],
-                ),
-                // 7 x 13
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        _buildWeekHeader(),
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 7,
-                                mainAxisExtent: 50,
-                              ),
-                          itemCount: 91, // 7 * 13
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () => _showSearchModal(context, index),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: colorScheme.outlineVariant
-                                        .withValues(alpha: 0.4),
-                                  ),
-                                ),
-                                child: const Center(child: Text('')),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
                     ),
                   ),
                 ),
-              ],
+              ),
+            ],
+          ),
+          const Divider(height: 1),
+          // Scrollable grid with period labels in sync
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: List.generate(_periods.length, (row) {
+                  final isEven = row.isEven;
+                  return Container(
+                    color: isEven
+                        ? colorScheme.surface
+                        : colorScheme.surfaceContainerHighest,
+                    height: _rowHeight,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: _periodColumnFlex,
+                          child: Center(
+                            child: Text(
+                              _periods[row],
+                              style: TextStyle(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                        ),
+                        ...List.generate(days.length, (col) {
+                          return Expanded(
+                            flex: _dayCellFlex,
+                            child: GestureDetector(
+                              onTap: () => _showSearchModal(
+                                context,
+                                day: col,
+                                periodIndex: row,
+                              ),
+                              child: Container(
+                                height: _rowHeight,
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    left: BorderSide(
+                                      color: colorScheme.outlineVariant
+                                          .withValues(alpha: 0.3),
+                                      width: 0.5,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  );
+                }),
+              ),
             ),
           ),
         ],
@@ -101,32 +141,14 @@ class CourseSelectionPage extends StatelessWidget {
     );
   }
 
-  // 星期標籤
-  Widget _buildWeekHeader() {
-    const weekDays = ['一', '二', '三', '四', '五', '六', '日'];
-    return Row(
-      children: weekDays
-          .map(
-            (day) => Expanded(
-              child: Container(
-                height: 30,
-                alignment: Alignment.center,
-                child: Text(
-                  day,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          )
-          .toList(),
-    );
-  }
-
-  // 選課搜尋彈窗
-  void _showSearchModal(BuildContext context, int index) {
-    int day = (index % 7) + 1;
-    String period = periods[index ~/ 7];
+  void _showSearchModal(
+    BuildContext context, {
+    required int day,
+    required int periodIndex,
+  }) {
     final colorScheme = Theme.of(context).colorScheme;
+    final period = _periods[periodIndex];
+    final days = _visibleDays;
 
     showModalBottomSheet(
       context: context,
@@ -140,7 +162,7 @@ class CourseSelectionPage extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              '新增課程 (週$day 第$period 節)',
+              '新增課程 (週${days[day]} 第$period 節)',
               style: TextStyle(
                 fontSize: 18,
                 color: colorScheme.primary,

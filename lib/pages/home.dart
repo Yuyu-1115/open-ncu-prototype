@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:prototype/components/home/section_header.dart';
 import 'package:prototype/components/course_card.dart';
 import 'package:prototype/components/quick_button.dart';
 import 'package:prototype/components/shortcut.dart';
@@ -30,49 +31,15 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(
-    BuildContext context,
-    String title, {
-    VoidCallback? onTap,
-  }) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          _horizontalPadding,
-          _sectionSpacing,
-          _horizontalPadding,
-          0,
-        ),
-        child: Row(
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            if (onTap != null)
-              IconButton(
-                onPressed: onTap,
-                icon: Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
+  
   Widget _buildCourseSection(BuildContext context) {
     return SliverMainAxisGroup(
       slivers: [
-        _buildSectionHeader(
-          context,
-          '接下來的課程',
-          onTap: () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => CurriculumPage())),
+        SectionHeader(
+          title: '接下來的課程',
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const CurriculumPage()),
+          ),
         ),
         SliverToBoxAdapter(
           child: SizedBox(
@@ -85,7 +52,7 @@ class HomePage extends StatelessWidget {
               ),
               itemCount: 3,
               separatorBuilder: (context, index) => const SizedBox(width: 10),
-              itemBuilder: (context, index) => CourseCard(
+              itemBuilder: (context, index) => const CourseCard(
                 courseName: '計算機概論 I',
                 courseTime: '週四 13:00-16:00',
                 courseLocation: '工程五館 A207',
@@ -100,12 +67,11 @@ class HomePage extends StatelessWidget {
   Widget _buildShortcutSection(BuildContext context) {
     return SliverMainAxisGroup(
       slivers: [
-        _buildSectionHeader(
-          context,
-          '捷徑',
-          onTap: () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => CurriculumPage())),
+        SectionHeader(
+          title: '捷徑',
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const CurriculumPage()),
+          ),
         ),
         SliverPadding(
           padding: const EdgeInsets.symmetric(
@@ -115,7 +81,7 @@ class HomePage extends StatelessWidget {
           sliver: SliverToBoxAdapter(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+              children: const [
                 Expanded(
                   child: Center(
                     child: ShortcutCircular(
@@ -183,7 +149,7 @@ class HomePage extends StatelessWidget {
   Widget _buildQuickActionSection(BuildContext context) {
     return SliverMainAxisGroup(
       slivers: [
-        _buildSectionHeader(context, '快速功能表'),
+        const SectionHeader(title: '快速功能表'),
         SliverPadding(
           padding: const EdgeInsets.symmetric(
             horizontal: _horizontalPadding,

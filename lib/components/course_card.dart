@@ -1,66 +1,83 @@
 import 'package:flutter/material.dart';
+import 'package:prototype/components/label.dart';
 
+// Card component for displaying course info
 class CourseCard extends StatelessWidget {
   const CourseCard({
     super.key,
     required this.courseName,
     required this.courseTime,
     required this.courseLocation,
+    this.category = 'Required',
+    this.onTap,
   });
 
   final String courseName;
   final String courseTime;
   final String courseLocation;
+  final String category;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Card(
-      // managed by CardTheme in theme.dart
-      child: Container(
-        width: 200,
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              courseName,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis, // prevent overflow caused by long course names
-            ),
-            const SizedBox(height: 4),
-            Text(
-              courseTime,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                fontSize: 13,
-              ),
-            ),
-            const SizedBox(height: 4),
-            // added location icon and adjusted text style
-            Row(
-              children: [
-                Icon(
-                  Icons.location_on_outlined,
-                  size: 14,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Text(
-                    courseLocation,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      fontSize: 12,
+      clipBehavior: Clip.antiAlias, // Clips ink well splash
+      child: InkWell(
+        onTap: onTap ?? () {},
+        child: Container(
+          width: 210,
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      courseName,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
+                  // Display category label 
+                  Label(
+                    text: category,
+                    color: category == 'Required' ? Colors.redAccent : Colors.blueAccent,
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Text(
+                courseTime,
+                style: TextStyle(
+                  color: colorScheme.onSurfaceVariant,
+                  fontSize: 13,
                 ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  Icon(Icons.location_on_outlined, size: 14, color: colorScheme.primary),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      courseLocation,
+                      style: TextStyle(
+                        color: colorScheme.onSurfaceVariant,
+                        fontSize: 12,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

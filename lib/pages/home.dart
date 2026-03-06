@@ -4,13 +4,13 @@ import 'package:prototype/components/home/section_header.dart';
 import 'package:prototype/components/course_card.dart';
 import 'package:prototype/components/quick_button.dart';
 import 'package:prototype/components/shortcut.dart';
+import 'package:prototype/pages/course.dart';
 import 'package:prototype/pages/curriculum.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   static const _horizontalPadding = 16.0;
-  static const _sectionSpacing = 8.0;
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +31,15 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  
   Widget _buildCourseSection(BuildContext context) {
     return SliverMainAxisGroup(
       slivers: [
         SectionHeader(
           title: '接下來的課程',
           onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const CurriculumPage()),
+            MaterialPageRoute(
+              builder: (context) => const CourseSelectionPage(),
+            ),
           ),
         ),
         SliverToBoxAdapter(
@@ -70,7 +71,9 @@ class HomePage extends StatelessWidget {
         SectionHeader(
           title: '捷徑',
           onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const CurriculumPage()),
+            MaterialPageRoute(
+              builder: (context) => const CourseSelectionPage(),
+            ),
           ),
         ),
         SliverPadding(
@@ -176,3 +179,4 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+

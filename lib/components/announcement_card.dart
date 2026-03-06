@@ -1,30 +1,76 @@
 import 'package:flutter/material.dart';
-import 'package:prototype/components/label.dart';
+import 'package:prototype/components/label.dart'; // Import Label component
 
+/// Card for displaying campus announcements.
 class AnnouncementCard extends StatelessWidget {
-  const AnnouncementCard({super.key, required this.label, required this.title});
+  const AnnouncementCard({
+    super.key,
+    required this.title,
+    required this.label, // Added label parameter to fix compilation error
+    this.date = '2024-05-20', // Default date for placeholder info
+    this.onTap,
+  });
 
-  final String label;
   final String title;
+  final String label;
+  final String date;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16.0),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Label(text: label, color: Colors.blueAccent),
-            const SizedBox(width: 8.0),
-            Text(
-              title,
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-            ),
-          ],
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap ?? () {},
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Category label using the standalone Label component
+                  Label(text: label, color: colorScheme.primary),
+                  // Date row with event icon
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.event_note_outlined,
+                        size: 14,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        date,
+                        style: TextStyle(
+                          color: colorScheme.onSurfaceVariant,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // Bold title with overflow handling
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+

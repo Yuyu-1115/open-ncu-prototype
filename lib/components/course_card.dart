@@ -1,81 +1,95 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/components/label.dart';
 
+// Card component for displaying course info
 class CourseCard extends StatelessWidget {
-  final String courseName;
-  final String courseTime;
-  final String courseLocation;
-
   const CourseCard({
     super.key,
     required this.courseName,
     required this.courseTime,
     required this.courseLocation,
+    this.category = '必修',
+    this.onTap,
   });
+
+  final String courseName;
+  final String courseTime;
+  final String courseLocation;
+  final String category;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final subtextColor = colorScheme.onSurfaceVariant;
+    final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      width: 200,
-      height: 100,
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        border: Border.all(color: colorScheme.outlineVariant, width: 1),
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.shadow.withValues(alpha: 0.15),
-            spreadRadius: 2,
-            blurRadius: 3,
-            offset: Offset(0, 3),
+    return Card(
+      clipBehavior: Clip.antiAlias, // Clips ink well splash
+      child: InkWell(
+        onTap: onTap ?? () {},
+        child: Container(
+          width: 210,
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      courseName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  // Display category label
+                  Label(
+                    text: category,
+                    color: category == '必修'
+                        ? Colors.redAccent
+                        : Colors.blueAccent,
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Text(
+                courseTime,
+                style: TextStyle(
+                  color: colorScheme.onSurfaceVariant,
+                  fontSize: 13,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  Icon(
+                    Icons.location_on_outlined,
+                    size: 14,
+                    color: colorScheme.primary,
+                  ),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      courseLocation,
+                      style: TextStyle(
+                        color: colorScheme.onSurfaceVariant,
+                        fontSize: 12,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                Label(text: '必修', color: Colors.red),
-                SizedBox(width: 5),
-                Text(
-                  courseName,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.left,
-                ),
-              ],
-            ),
-            SizedBox(height: 2),
-            Row(
-              children: [
-                Icon(Icons.schedule, size: 14, color: subtextColor),
-                SizedBox(width: 5),
-                Text(
-                  courseTime,
-                  style: TextStyle(fontSize: 14, color: subtextColor),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Icon(Icons.location_on, size: 14, color: subtextColor),
-                Text(
-                  courseLocation,
-                  style: TextStyle(fontSize: 14, color: subtextColor),
-                  textAlign: TextAlign.right,
-                ),
-              ],
-            ),
-          ],
         ),
       ),
     );
   }
 }
+

@@ -16,11 +16,16 @@ class PortalSessionManager extends ChangeNotifier {
   PortalSessionStatus _status = PortalSessionStatus.unknown;
   DateTime? _lastCheckedAt;
   Object? _lastError;
+  String? _jsToken;
+  String? _jsTokenSource;
   Future<void>? _activeCheck;
 
   PortalSessionStatus get status => _status;
   DateTime? get lastCheckedAt => _lastCheckedAt;
   Object? get lastError => _lastError;
+  String? get jsToken => _jsToken;
+  String? get jsTokenSource => _jsTokenSource;
+  bool get hasJsToken => _jsToken != null && _jsToken!.isNotEmpty;
 
   bool get isAuthenticated => _status == PortalSessionStatus.authenticated;
   bool get isChecking => _status == PortalSessionStatus.checking;
@@ -35,6 +40,34 @@ class PortalSessionManager extends ChangeNotifier {
   }
 
   void markExpired() {
+    _jsToken = null;
+    _jsTokenSource = null;
+    _setStatus(PortalSessionStatus.expired);
+  }
+
+  void updateFromJsProbe({
+    required String? token,
+    String? source,
+    Object? error,
+  }) {
+    _lastCheckedAt = DateTime.now();
+    if (error != null) {
+      _lastError = error;
+      _setStatus(PortalSessionStatus.error);
+      return;
+    }
+
+    final normalized = token?.trim();
+    if (normalized != null && normalized.isNotEmpty) {
+      _lastError = null;
+      _jsToken = normalized;
+      _jsTokenSource = source;
+      _setStatus(PortalSessionStatus.authenticated);
+      return;
+    }
+
+    _jsToken = null;
+    _jsTokenSource = null;
     _setStatus(PortalSessionStatus.expired);
   }
 
@@ -72,8 +105,9 @@ class PortalSessionManager extends ChangeNotifier {
       }
 
       _lastCheckedAt = DateTime.now();
+      final isAuthenticated = hasValidCookie || hasJsToken;
       _setStatus(
-        hasValidCookie
+        isAuthenticated
             ? PortalSessionStatus.authenticated
             : PortalSessionStatus.expired,
       );

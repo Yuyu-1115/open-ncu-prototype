@@ -21,9 +21,18 @@ class PortalAuthenticator {
   static final PortalAuthenticator _instance = PortalAuthenticator._internal();
   factory PortalAuthenticator() => _instance;
   HeadlessInAppWebView? _headless;
+  Future<String?>? _fetching;
   PortalAuthenticator._internal();
 
   Future<String?> fetchPortalToken() async {
+    if (_fetching != null) {
+      return _fetching!;
+    }
+    _fetching = _fetchPortalTokenInternal();
+    return _fetching!;
+  }
+
+  Future<String?> _fetchPortalTokenInternal() async {
     final completer = Completer<String?>();
     _headless = HeadlessInAppWebView(
       initialUrlRequest: URLRequest(
@@ -61,6 +70,8 @@ class PortalAuthenticator {
       debugPrint("Error occured during fetching portal token");
       debugPrintStack();
       return "";
+    } finally {
+      _fetching = null;
     }
   }
 }

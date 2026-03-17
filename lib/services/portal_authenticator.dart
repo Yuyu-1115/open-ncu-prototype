@@ -32,7 +32,9 @@ class PortalAuthenticator {
       initialSettings: InAppWebViewSettings(javaScriptEnabled: true),
       onLoadStop: (controller, url) async {
         final token = await controller.evaluateJavascript(source: "token;");
-        completer.complete(token);
+        if (!completer.isCompleted) {
+          completer.complete(token);
+        }
       },
     );
 

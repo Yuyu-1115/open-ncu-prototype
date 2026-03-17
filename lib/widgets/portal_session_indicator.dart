@@ -60,8 +60,10 @@ class PortalSessionIndicator extends StatelessWidget {
             switch (value) {
               case _SessionAction.refresh:
                 onRefresh();
+                break;
               case _SessionAction.login:
                 onOpenLogin();
+                break;
             }
           },
           itemBuilder: (context) => const [

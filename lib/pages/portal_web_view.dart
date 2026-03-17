@@ -61,7 +61,7 @@ class _PortalWebViewPageState extends State<PortalWebViewPage> {
                 javaScriptEnabled: true,
                 domStorageEnabled: true,
                 useOnDownloadStart: true,
-                isInspectable: true,
+                isInspectable: kDebugMode,
               ),
               onWebViewCreated: (controller) {
                 _webViewController = controller;

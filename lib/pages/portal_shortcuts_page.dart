@@ -194,7 +194,8 @@ class _ShortcutGrid extends StatelessWidget {
       builder: (context, constraints) {
         const spacing = 10.0;
         const columns = 4;
-        final itemWidth = (constraints.maxWidth - spacing * (columns - 1)) / 4;
+        final itemWidth =
+            (constraints.maxWidth - spacing * (columns - 1)) / columns;
 
         return Wrap(
           spacing: spacing,

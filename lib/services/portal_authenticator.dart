@@ -36,22 +36,29 @@ class PortalAuthenticator {
       },
     );
 
-    await _headless!.run();
-    status.value = PortalSessionStatus.authenticating;
+    try {
+      await _headless!.run();
+      status.value = PortalSessionStatus.authenticating;
 
-    final result = await completer.future;
-    final token = result?.trim();
+      final result = await completer.future;
+      final token = result?.trim();
 
-    await _headless!.dispose();
+      await _headless!.dispose();
 
-    if (token != null && token.isNotEmpty) {
-      portalToken.value = token;
-      status.value = PortalSessionStatus.authenticated;
-    } else {
-      portalToken.value = null;
-      status.value = PortalSessionStatus.expired;
+      if (token != null && token.isNotEmpty) {
+        portalToken.value = token;
+        status.value = PortalSessionStatus.authenticated;
+      } else {
+        portalToken.value = null;
+        status.value = PortalSessionStatus.expired;
+      }
+
+      return token;
+    } catch (e) {
+      status.value = PortalSessionStatus.error;
+      debugPrint("Error occured during fetching portal token");
+      debugPrintStack();
+      return "";
     }
-
-    return token;
   }
 }

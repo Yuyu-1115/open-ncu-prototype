@@ -4,7 +4,7 @@ import 'package:prototype/services/portal_authenticator.dart';
 
 const _portalHost = 'portal.ncu.edu.tw';
 
-final List<PortalShortcutSection> defaultPortalShortcutSections = [
+List<PortalShortcutSection> get defaultPortalShortcutSections => [
   PortalShortcutSection(
     title: '常用服務',
     items: [

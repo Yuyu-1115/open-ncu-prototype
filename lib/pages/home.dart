@@ -78,50 +78,37 @@ class HomePage extends StatelessWidget {
         SliverPadding(
           padding: const EdgeInsets.symmetric(
             horizontal: _horizontalPadding,
-            vertical: 4.0,
+            vertical: 8.0,
           ),
-          sliver: SliverToBoxAdapter(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Expanded(
-                  child: Center(
-                    child: ShortcutCircular(
-                      icon: Icons.school,
-                      label: '校務系統',
-                      color: Color(0xFF4A90D9),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: ShortcutCircular(
-                      icon: Icons.calendar_today,
-                      label: '行事曆',
-                      color: Color(0xFFE57373),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: ShortcutCircular(
-                      icon: Icons.mail_outline,
-                      label: '信箱',
-                      color: Color(0xFF66BB6A),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: ShortcutCircular(
-                      icon: Icons.library_books,
-                      label: '圖書館',
-                      color: Color(0xFFFF9800),
-                    ),
-                  ),
-                ),
-              ],
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,        
+              mainAxisSpacing: 12.0,     
+              crossAxisSpacing: 12.0,    
+              childAspectRatio: 0.85,    
             ),
+            delegate: SliverChildListDelegate([
+              const ShortcutCircular(
+                icon: Icons.school,
+                label: '校務系統',
+                color: Color(0xFF4A90D9),
+              ),
+              const ShortcutCircular(
+                icon: Icons.calendar_today,
+                label: '行事曆',
+                color: Color(0xFFE57373),
+              ),
+              const ShortcutCircular(
+                icon: Icons.mail_outline,
+                label: '信箱',
+                color: Color(0xFF66BB6A),
+              ),
+              const ShortcutCircular(
+                icon: Icons.library_books,
+                label: '圖書館',
+                color: Color(0xFFFFFF9800),
+              ),
+            ]),
           ),
         ),
       ],

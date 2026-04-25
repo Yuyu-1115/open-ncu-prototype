@@ -19,7 +19,7 @@ A Flutter-based frontend prototype for the NCU campus service and course selecti
 
 - Flutter SDK (latest stable version recommended)
 - Dart SDK
-- The related SDK for the target architecture (Xcode for iOS, Android Studio for Android)
+- The related SDK for the target platform (Xcode for iOS, Android Studio for Android)
 
 ### Installation
 

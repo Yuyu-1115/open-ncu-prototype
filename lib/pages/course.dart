@@ -27,116 +27,195 @@ class _CourseSelectionPageState extends State<CourseSelectionPage> {
     'C',
   ];
   static const List<String> _weekDays = ['一', '二', '三', '四', '五', '六', '日'];
-  static const double _rowHeight = 50.0;
-  static const int _periodColumnFlex = 1;
-  static const int _dayCellFlex = 2;
+  static const double _headerHeight = 36.0;
+  static const double _periodWidth = 40.0;
 
   List<String> get _visibleDays =>
       _showWeekends ? _weekDays : _weekDays.sublist(0, 5);
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final days = _visibleDays;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('課表', style: TextStyle(fontWeight: FontWeight.bold)),
-        actions: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
+      appBar: _buildAppBar(context),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final totalWidth = constraints.maxWidth;
+          final totalHeight = constraints.maxHeight;
+
+          final dayWidth = (totalWidth - _periodWidth) / days.length;
+          // Calculate row height based on available height after header and divider
+          final rowHeight = (totalHeight - _headerHeight - 1) / _periods.length;
+
+          return Column(
             children: [
-              Text(
-                '週末',
-                style: TextStyle(fontSize: 14, color: colorScheme.onSurface),
-              ),
-              Switch(
-                value: _showWeekends,
-                onChanged: (v) => setState(() => _showWeekends = v),
-              ),
-            ],
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Fixed week header
-          Row(
-            children: [
-              Spacer(flex: _periodColumnFlex),
-              ...days.map(
-                (day) => Expanded(
-                  flex: _dayCellFlex,
-                  child: SizedBox(
-                    height: 36,
-                    child: Center(
-                      child: Text(
-                        day,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+              _buildHeader(days, dayWidth),
+              const Divider(height: 1),
+              Expanded(
+                child: Stack(
+                  children: [
+                    _buildTimetable(context, days, dayWidth, rowHeight),
+                    ..._buildCourseCards(context, dayWidth, rowHeight),
+                  ],
                 ),
               ),
             ],
-          ),
-          const Divider(height: 1),
-          // Scrollable grid with period labels in sync
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: List.generate(_periods.length, (row) {
-                  final isEven = row.isEven;
-                  return Container(
-                    color: isEven
-                        ? colorScheme.surface
-                        : colorScheme.surfaceContainerHighest,
-                    height: _rowHeight,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: _periodColumnFlex,
-                          child: Center(
-                            child: Text(
-                              _periods[row],
-                              style: TextStyle(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ),
-                        ),
-                        ...List.generate(days.length, (col) {
-                          return Expanded(
-                            flex: _dayCellFlex,
-                            child: GestureDetector(
-                              onTap: () => _showSearchModal(
-                                context,
-                                day: col,
-                                periodIndex: row,
-                              ),
-                              child: Container(
-                                height: _rowHeight,
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    left: BorderSide(
-                                      color: colorScheme.outlineVariant
-                                          .withValues(alpha: 0.3),
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                      ],
-                    ),
-                  );
-                }),
+          );
+        },
+      ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return AppBar(
+      title: const Text('課表', style: TextStyle(fontWeight: FontWeight.bold)),
+      actions: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '週末',
+              style: TextStyle(fontSize: 14, color: colorScheme.onSurface),
+            ),
+            Switch(
+              value: _showWeekends,
+              onChanged: (v) => setState(() => _showWeekends = v),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeader(List<String> days, double dayWidth) {
+    return Row(
+      children: [
+        const SizedBox(width: _periodWidth),
+        ...days.map(
+          (day) => SizedBox(
+            width: dayWidth,
+            height: _headerHeight,
+            child: Center(
+              child: Text(
+                day,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTimetable(
+    BuildContext context,
+    List<String> days,
+    double dayWidth,
+    double rowHeight,
+  ) {
+    return Column(
+      children: List.generate(
+        _periods.length,
+        (index) => _buildPeriodRow(context, index, days, dayWidth, rowHeight),
+      ),
+    );
+  }
+
+  List<Widget> _buildCourseCards(
+    BuildContext context,
+    double dayWidth,
+    double rowHeight,
+  ) {
+    // Mock course for demonstration
+    final mockCourses = [
+      (name: '計算機概論', dayIndex: 0, startPeriod: 1, length: 3),
+      (name: '微積分 I', dayIndex: 2, startPeriod: 5, length: 2),
+      (name: '物理實驗', dayIndex: 4, startPeriod: 9, length: 3),
+    ];
+
+    return mockCourses.map((course) {
+      return Positioned(
+        top: course.startPeriod * rowHeight,
+        left: _periodWidth + (course.dayIndex * dayWidth),
+        width: dayWidth,
+        height: course.length * rowHeight,
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.blue.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: Colors.blue.withValues(alpha: 0.5)),
+            ),
+            padding: const EdgeInsets.all(4),
+            child: Text(
+              course.name,
+              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+      );
+    }).toList();
+  }
+
+  Widget _buildPeriodRow(
+    BuildContext context,
+    int index,
+    List<String> days,
+    double dayWidth,
+    double rowHeight,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isEven = index.isEven;
+
+    return Container(
+      color: isEven ? colorScheme.surface : colorScheme.surfaceContainerHighest,
+      height: rowHeight,
+      child: Row(
+        children: [
+          SizedBox(
+            width: _periodWidth,
+            child: Center(
+              child: Text(
+                _periods[index],
+                style: TextStyle(color: colorScheme.onSurfaceVariant),
+              ),
+            ),
+          ),
+          ...List.generate(
+            days.length,
+            (col) => _buildDayCell(context, col, index, dayWidth, rowHeight),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDayCell(
+    BuildContext context,
+    int col,
+    int periodIndex,
+    double dayWidth,
+    double rowHeight,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return GestureDetector(
+      onTap: () =>
+          _showSearchModal(context, day: col, periodIndex: periodIndex),
+      child: Container(
+        width: dayWidth,
+        height: rowHeight,
+        decoration: BoxDecoration(
+          border: Border(
+            left: BorderSide(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+              width: 0.5,
+            ),
+          ),
+        ),
       ),
     );
   }

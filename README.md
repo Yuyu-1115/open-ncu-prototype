@@ -13,12 +13,13 @@ A Flutter-based frontend prototype for the NCU campus service and course selecti
 
 - Flutter SDK (latest stable version recommended)
 - Dart SDK
+- The related SDK for the target architecture (Xcode for iOS, Android Studio for Android)
 
 ### Installation
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/ncu-three-way-handshake/open-ncu-prototype.git
    ```
 2. Install dependencies:
    ```bash
